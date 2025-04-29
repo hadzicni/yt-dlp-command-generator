@@ -1,6 +1,6 @@
 {
   "name": "YT-DLP Loader",
-  "short_name": "Loader",
+  "short_name": "YT Loader",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d1117",
