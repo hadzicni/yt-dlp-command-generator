@@ -4,7 +4,7 @@ A modern web-based tool to generate advanced **yt-dlp** commands using a visual 
 
 ![Framework](https://img.shields.io/badge/framework-React-blue?logo=react)
 ![Bundler](https://img.shields.io/badge/bundler-Vite-purple?logo=vite)
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![yt-dlp](https://img.shields.io/badge/yt--dlp-compatible-brightgreen)
 
 ---
