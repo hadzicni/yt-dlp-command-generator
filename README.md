@@ -1,94 +1,68 @@
-# yt-dlp Command Generator 🎬⚡
+# 🎬 YT-DLP Command Generator
 
-A modern, responsive web application to generate yt-dlp download commands easily.  
-Built with React, Framer Motion, and Vite. Designed for users without any yt-dlp knowledge.
+A modern web-based tool to generate advanced **yt-dlp** commands using a visual UI — no need to remember long CLI flags. Built with **React**, **Vite**, and **Tailwind-style CSS**. Supports audio/video format selection, quality filters, and more.
+
+![Framework](https://img.shields.io/badge/framework-React-blue?logo=react)
+![Bundler](https://img.shields.io/badge/bundler-Vite-purple?logo=vite)
+![License](https://img.shields.io/badge/license-MIT-green)
+![yt-dlp](https://img.shields.io/badge/yt--dlp-compatible-brightgreen)
 
 ---
 
 ## ✨ Features
 
-- 🎥 Supports YouTube videos, playlists, and shorts
-- 🛠 Generate customized yt-dlp commands based on format, quality, and options
-- 🎛 Toggle switches for advanced settings
-- 📋 One-click copy command to clipboard (with feedback notification)
-- 🌓 Dark mode with gradient accents
-- 🚀 Progressive Web App (PWA) - Installable on mobile and desktop
-- 📱 Fully responsive (mobile friendly)
-- 🛡 Input validation for YouTube URLs
-- ✨ Smooth animations with Framer Motion
-- 🎨 Clean, professional UI/UX
+- 🎥 Input YouTube (or other) URLs
+- ⚙️ Select output format: audio/video
+- 📐 Choose quality settings (e.g. best, worst, 720p)
+- 🎛️ Toggle advanced `yt-dlp` flags
+- 📋 One-click copy to clipboard
+- 🧼 Clean & responsive UI (desktop/mobile)
+- 🧠 Built-in validation + hinting
+- 🖼️ Includes screenshots for preview
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/yt-dlp-generator.git
-cd yt-dlp-generator
-```
-
-### 2. Install dependencies
+### 📦 Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Start the development server
+### 🧪 Start development server
 
 ```bash
 npm run dev
 ```
 
-Then open [http://localhost:5173](http://localhost:5173) in your browser.
+App will be available at: [http://localhost:5173](http://localhost:5173)
 
----
-
-## 📦 Build for Production
+### ⚙️ Build for production
 
 ```bash
 npm run build
 ```
 
-The optimized build will be located in the `dist/` folder.
-
-You can deploy the `dist/` folder to Vercel, Netlify, or your own server.
-
----
-
-## ⚙️ Technologies Used
-
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) (for PWA support)
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
-Feel free to fork, modify, and share!
-
----
-
-## 🙌 Credits
-
-- Special thanks to [yt-dlp](https://github.com/yt-dlp/yt-dlp) – the ultimate video downloader project.
-- UI inspirations from modern SaaS platforms.
-
 ---
 
 ## 📷 Screenshots
 
-| Desktop View | Mobile View |
-|--------------|-------------|
-| ![Desktop](./screenshots/desktop.png) | ![Mobile](./screenshots/mobile.png) |
+### Desktop  
+![Desktop UI](./screenshots/desktop.png)
+
+### Mobile  
+![Mobile UI](./screenshots/mobile.png)
 
 ---
 
-> **Note:**  
-> This app generates yt-dlp command lines only.  
-> **yt-dlp.exe** must be installed separately on your system.
+## 👨‍💻 Author
+
+Made by **Nikola Hadzic**  
+GitHub: [@hadzicni](https://github.com/hadzicni)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
