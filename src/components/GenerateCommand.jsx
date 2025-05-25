@@ -1,179 +1,167 @@
-import { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { isValidYouTubeUrl } from '../utils/validate'
+import { ArrowRight, RotateCcw, Sparkles, Terminal } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import CopyButton from './CopyButton'
 
+function isValidYouTubeUrl(url) {
+  const regex = /^(https?:\/\/)?(www\.(youtube\.com|youtu\.be)|youtu\.be)\/.+$/
+  return regex.test(url)
+}
+
 function GenerateCommand({ url, format, quality, audioOnly, videoOnly, playlist }) {
-    const [showCommand, setShowCommand] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [refreshKey, setRefreshKey] = useState(0)
+  const [showCommand, setShowCommand] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
-    const command = useMemo(() => {
-        if (!url || url.trim() === '') return ''
+  const command = useMemo(() => {
+    if (!url || url.trim() === '') return ''
 
-        let commandParts = ['yt-dlp']
+    let commandParts = ['yt-dlp']
 
-        if (audioOnly) {
-            commandParts.push('--extract-audio')
-            commandParts.push(`--audio-format ${format}`)
-        } else if (videoOnly) {
-            commandParts.push('-f bestvideo+bestaudio/best')
-        } else {
-            if (format === 'mp3' || format === 'm4a') {
-                commandParts.push('--extract-audio')
-                commandParts.push(`--audio-format ${format}`)
+    if (audioOnly) {
+      commandParts.push('--extract-audio')
+      commandParts.push(`--audio-format ${format}`)
+    } else if (videoOnly) {
+      commandParts.push('-f bestvideo+bestaudio/best')
+    } else {
+      if (format === 'mp3' || format === 'm4a') {
+        commandParts.push('--extract-audio')
+        commandParts.push(`--audio-format ${format}`)
+      }
+    }
+
+    if (!playlist) {
+      commandParts.push('--no-playlist')
+    }
+
+    if (quality === 'medium') {
+      commandParts.push('-f "best[height<=720]"')
+    } else if (quality === 'worst') {
+      commandParts.push('-f worst')
+    }
+
+    commandParts.push('-o "%(title)s.%(ext)s"')
+    commandParts.push(`"${url}"`)
+
+    return commandParts.join(' ')
+  }, [url, format, quality, audioOnly, videoOnly, playlist, refreshKey])
+
+  const handleShowCommand = () => {
+    if (!url || url.trim() === '' || !isValidYouTubeUrl(url)) return
+    
+    if (!showCommand) {
+      setLoading(true)
+      setTimeout(() => {
+        setShowCommand(true)
+        setLoading(false)
+      }, 800)
+    }
+  }
+
+  const handleRegenerateCommand = () => {
+    setLoading(true)
+    setTimeout(() => {
+      setRefreshKey(prev => prev + 1)
+      setLoading(false)
+    }, 600)
+  }
+
+  const isDisabled = !url || url.trim() === '' || !isValidYouTubeUrl(url)
+
+  return (
+    <div className="space-y-6">
+      {!showCommand ? (
+        <button
+          onClick={handleShowCommand}
+          disabled={isDisabled}
+          className={`
+            group relative w-full p-6 rounded-2xl border transition-all duration-300
+            ${isDisabled 
+              ? 'bg-gray-600/20 border-gray-600/30 cursor-not-allowed opacity-50' 
+              : 'bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-blue-600/20 border-purple-400/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98]'
             }
-        }
+          `}
+        >
+          {!isDisabled && (
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+          )}
+          
+          <div className="relative flex items-center justify-center gap-3">
+            <div className={`
+              p-2 rounded-lg transition-all duration-300
+              ${isDisabled ? 'bg-gray-600/30' : 'bg-white/10 group-hover:bg-white/20'}
+            `}>
+              <Terminal className={`w-6 h-6 ${isDisabled ? 'text-gray-500' : 'text-purple-400 group-hover:text-white'}`} />
+            </div>
+            <span className={`text-xl font-semibold ${isDisabled ? 'text-gray-500' : 'text-white'}`}>
+              Generate Command
+            </span>
+            <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isDisabled ? 'text-gray-500' : 'text-purple-400 group-hover:translate-x-1'}`} />
+          </div>
+        </button>
+      ) : (
+        <button
+          onClick={handleRegenerateCommand}
+          className="group relative w-full p-4 rounded-2xl bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-blue-600/20 border border-purple-400/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+          
+          <div className="relative flex items-center justify-center gap-3">
+            <div className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-all duration-300">
+              <RotateCcw className="w-5 h-5 text-purple-400 group-hover:text-white group-hover:rotate-180 transition-all duration-500" />
+            </div>
+            <span className="text-lg font-semibold text-white">
+              Regenerate Command
+            </span>
+            <Sparkles className="w-5 h-5 text-purple-400 group-hover:text-white animate-pulse" />
+          </div>
+        </button>
+      )}
 
-        if (!playlist) {
-            commandParts.push('--no-playlist')
-        }
-
-        if (quality === 'medium') {
-            commandParts.push('-f "best[height<=720]"')
-        } else if (quality === 'worst') {
-            commandParts.push('-f worst')
-        }
-
-        commandParts.push('-o "%(title)s.%(ext)s"')
-        commandParts.push(`"${url}"`)
-
-        return commandParts.join(' ')
-    }, [url, format, quality, audioOnly, videoOnly, playlist, refreshKey])
-
-    const handleShowCommand = () => {
-        if (!url || url.trim() === '') return
-        if (!showCommand) {
-            setLoading(true)
-            setTimeout(() => {
-                setShowCommand(true)
-                setLoading(false)
-            }, 700)
-        }
-    }
-
-    const handleRegenerateCommand = () => {
-        setLoading(true)
-        setTimeout(() => {
-            setRefreshKey(prev => prev + 1)
-            setLoading(false)
-        }, 700)
-    }
-
-    return (
-        <div style={{ marginTop: '2rem' }}>
-            {!showCommand ? (
-                <motion.button
-                    onClick={handleShowCommand}
-                    disabled={!url || url.trim() === '' || !isValidYouTubeUrl(url)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                        background: !url ? '#2c2f36' : 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
-                        opacity: !url ? 0.5 : 1,
-                        pointerEvents: !url ? 'none' : 'auto',
-                        padding: '0.75rem 1.5rem',
-                        border: 'none',
-                        borderRadius: '10px',
-                        color: 'white',
-                        fontSize: '1rem',
-                        cursor: !url ? 'not-allowed' : 'pointer',
-                        width: '100%',
-                        marginBottom: '1.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem',
-                        transition: '0.3s'
-                    }}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                        <path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path>
-                    </svg>
-                    Show Command
-                </motion.button>
-            ) : (
-                <motion.button
-                    onClick={handleRegenerateCommand}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                        background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
-                        padding: '0.75rem 1.5rem',
-                        border: 'none',
-                        borderRadius: '10px',
-                        color: 'white',
-                        fontSize: '1rem',
-                        cursor: 'pointer',
-                        width: '100%',
-                        marginBottom: '1.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem',
-                        transition: '0.3s'
-                    }}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                        <path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path>
-                    </svg>
-                    Regenerate Command
-                </motion.button>
-            )}
-
-            <AnimatePresence>
-                {loading && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        style={{
-                            textAlign: 'center',
-                            color: '#8b5cf6',
-                            fontSize: '1.1rem',
-                            marginBottom: '1.5rem'
-                        }}
-                    >
-                        Generating command...
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-                {showCommand && !loading && (
-                    <motion.div
-                        key={refreshKey} // <- WICHTIG: Key neu setzen beim Regenerate!
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: [0, 1, 0.7, 1] }}
-                        exit={{ opacity: 0, y: 30 }}
-                        transition={{ duration: 1 }}
-                        style={{
-                            backgroundColor: '#161b22',
-                            border: '1px solid #30363d',
-                            borderRadius: '10px',
-                            padding: '1rem',
-                            position: 'relative'
-                        }}
-                    >
-                        <pre style={{
-                            overflowX: 'auto',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                            color: '#e4e6eb',
-                            fontSize: '0.95rem',
-                            fontFamily: 'monospace',
-                            marginBottom: '1rem'
-                        }}>
-                            {command}
-                        </pre>
-
-                        <CopyButton text={command} />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+      {loading && (
+        <div className="flex items-center justify-center py-8">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin"></div>
+            <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-transparent border-t-pink-500 animate-spin animation-delay-150"></div>
+          </div>
+          <div className="ml-4 text-purple-300 font-medium animate-pulse">
+            Generating your command...
+          </div>
         </div>
-    )
+      )}
+
+      {showCommand && !loading && (
+        <div 
+          key={refreshKey}
+          className="group/command animate-in slide-in-from-bottom-4 duration-700"
+        >
+          <div className="relative p-6 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 rounded-2xl opacity-0 group-hover/command:opacity-100 transition-opacity duration-500"></div>
+            
+            <div className="relative flex items-center gap-2 mb-4">
+              <Terminal className="w-5 h-5 text-purple-400" />
+              <span className="text-sm font-semibold text-gray-300">Generated Command</span>
+              <div className="flex-1"></div>
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <pre className="text-sm font-mono text-gray-100 leading-relaxed whitespace-pre-wrap break-all p-4 bg-black/30 rounded-xl border border-slate-600/30">
+                <span className="text-green-400">$</span> {command}
+              </pre>
+            </div>
+            
+            <div className="relative mt-4">
+              <CopyButton text={command} />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default GenerateCommand

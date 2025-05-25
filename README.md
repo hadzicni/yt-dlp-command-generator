@@ -46,16 +46,6 @@ npm run build
 
 ---
 
-## 📷 Screenshots
-
-### Desktop  
-![Desktop UI](./screenshots/desktop.png)
-
-### Mobile  
-![Mobile UI](./screenshots/mobile.png)
-
----
-
 ## 👨‍💻 Author
 
 Made by **Nikola Hadzic**  
@@ -66,4 +56,3 @@ GitHub: [@hadzicni](https://github.com/hadzicni)
 ## 📄 License
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](./LICENSE) file for details.
-
