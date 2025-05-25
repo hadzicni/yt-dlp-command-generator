@@ -46,6 +46,28 @@ npm run build
 
 ---
 
+### Build Docker Image
+
+```bash
+docker build -t ghcr.io/hadzicni/yt-dlp-command-generator:latest .
+```
+
+### Login to ghcr.io
+
+```bash
+echo <GITHUB_TOKEN> | docker login ghcr.io -u hadzicni --password-stdin
+```
+
+#### <GITHUB_TOKEN> must be a GitHub Personal Access Token with the write:packages scope.
+
+### Push Image
+
+```bash
+docker push ghcr.io/hadzicni/yt-dlp-command-generator:latest
+```
+
+---
+
 ## 👨‍💻 Author
 
 Made by **Nikola Hadzic**  
