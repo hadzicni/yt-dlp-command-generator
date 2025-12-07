@@ -1,0 +1,25 @@
+name: Build & Push Docker Image to Custom Registry (HTTPS, no auth)
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        run: |
+          docker build -t registry.nikolahadzic.net/yt-dlp-command-generator:latest .
+
+      - name: Push image
+        run: |
+          docker push registry.nikolahadzic.net/yt-dlp-command-generator:latest
